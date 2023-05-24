@@ -1,0 +1,68 @@
+<mat-grid-list
+    cols="2"
+    rowHeight="5em"
+>
+    <mat-grid-tile colspan="1">
+        <mat-form-field appearance="outline">
+            <mat-label>Select an instructor</mat-label>
+            <mat-select
+                matInput
+                [formControl] = "instructorControl"
+                (valueChange)="handleInstructorChange($event)"
+            >
+                <mat-option
+                    *ngFor="let instructor of instructors"
+                    [value]="instructor._id"
+                >
+                    {{ instructor.name }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </mat-grid-tile>
+    <mat-grid-tile colspan="1">
+        <mat-form-field appearance="outline">
+            <input
+                matInput
+                [formControl]="dateControl"
+                [matDatepicker]="picker"
+                (dateChange)="handleDateChange($event)"
+                [min]="minDate"
+            >
+            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+    </mat-grid-tile>
+    <mat-grid-tile 
+        colspan="2"
+        *ngIf="instructorControl.value === ''"
+    >
+        Select an instructor to see available lesson times.
+    </mat-grid-tile>
+    <mat-grid-tile
+        colspan="2"
+        *ngIf="instructorControl.value !== '' && timeslots.length == 0"
+    >
+        Sorry, looks like {{ getInstructorById(instructorControl.value).name }} does not 
+        have any lesson times on {{ getDisplayDate(dateControl.value) }}.
+    </mat-grid-tile>
+    <mat-grid-tile
+        colspan="1"
+        rowspan=""
+        *ngIf="instructorControl.value !== '' && timeslots.length > 0">
+        <app-day-schedule
+            [timeslots]="timeslots"
+            (timeslotClick)="onTimeslotClick($event)"
+        ></app-day-schedule>
+    </mat-grid-tile>
+    <mat-grid-tile
+        colspan="1"
+        rowspan="10"
+        style="background-color: red;"
+    >
+        <app-lesson-form
+            [timeslotDetails]="timeslotDetails"
+            (formSubmit)="onFormSubmit($event)"
+            style="width: 100%; height: 100%;"
+        ></app-lesson-form>
+    </mat-grid-tile>
+</mat-grid-list>

@@ -1,0 +1,105 @@
+<mat-card style="width: 50em; height: 100%">
+    <form
+        [formGroup]="formGroup"
+        (ngSubmit)="onSubmit()"
+    >
+        <mat-grid-list
+            cols="2"
+            rowHeight="5em"
+            gutterSize="0px"
+        >
+            <mat-grid-tile colspan="1">
+                <mat-form-field appearance="outline" style="width: 100%;">
+                    <mat-label>Date</mat-label>
+                    <input
+                        matInput
+                        readonly
+                        type="text"
+                        formControlName="date"
+                    >
+                </mat-form-field>
+            </mat-grid-tile>
+            <mat-grid-tile colspan="1">
+                <mat-form-field appearance="outline" style="width: 100%;">
+                    <mat-label>Time</mat-label>
+                    <input
+                        matInput
+                        readonly
+                        type="text"
+                        formControlName="time"
+                    >
+                </mat-form-field>
+            </mat-grid-tile>
+            <mat-grid-tile
+                class="student-input"
+                colspan="2"
+            >
+                <mat-form-field appearance="outline" style="width: 25em;">
+                    <mat-label>Name</mat-label>
+                    <input
+                        matInput
+                        type="text"
+                        formControlName="studentName"
+                    >
+                    <mat-error
+                        *ngIf="formGroup.controls['studentName'].invalid &&
+                            formGroup.controls['studentName'].touched &&
+                            formGroup.controls['studentName'].errors"
+                    >
+                        <span *ngIf="formGroup.controls['studentName'].errors['required']">
+                            Name is required.
+                        </span>
+                        <span *ngIf="formGroup.controls['studentName'].errors['minlength']">
+                            Name is too short.
+                        </span>
+                    </mat-error>
+                </mat-form-field>
+            </mat-grid-tile>
+            <mat-grid-tile
+                class="student-input"
+                colspan="2"
+            >
+                <mat-form-field appearance="outline">
+                    <mat-label>Email</mat-label>
+                    <input
+                        matInput
+                        type="email"
+                        formControlName="studentEmail"
+                    >
+                </mat-form-field>
+                <mat-error
+                    *ngIf="formGroup.controls['studentEmail'].invalid &&
+                        formGroup.controls['studentEmail'].touched &&
+                        formGroup.controls['studentEmail'].errors"
+                >
+                    <span *ngIf="formGroup.controls['studentEmail'].errors['required']">
+                        Email is required.
+                    </span>
+                    <span *ngIf="formGroup.controls['studentEmail'].errors['email']">
+                        Not a valid email address.
+                    </span>
+                </mat-error>
+            </mat-grid-tile>
+            <mat-grid-tile
+                class="student-input"
+                colspan="2"
+            >
+                <mat-form-field appearance="outline">
+                    <mat-label>Notes (optional)</mat-label>
+                    <textarea
+                        matInput
+                        formControlName="studentNotes"
+                    ></textarea>
+                </mat-form-field>
+            </mat-grid-tile>
+            <mat-grid-tile colspan="2">
+                <button
+                    mat-flat-button
+                    type="submit"
+                    color="primary"
+                    [disabled]="formGroup.invalid"
+                >Submit</button>
+            </mat-grid-tile>
+        </mat-grid-list>
+    </form> 
+</mat-card>

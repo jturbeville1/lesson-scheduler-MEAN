@@ -1,0 +1,15 @@
+<div>
+    <mat-button-toggle-group
+        (change)="handleButtonClick($event)"
+        vertical
+        multiple="false"
+    >
+        <mat-button-toggle
+            *ngFor="let timeslot of timeslots"
+            [value]="timeslot._id"
+            [disabled]="!timeslot.open"
+        >
+            {{ getDisplayTime(timeslot.time) }}
+        </mat-button-toggle>
+      </mat-button-toggle-group>
+</div>

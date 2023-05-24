@@ -1,0 +1,10 @@
+client/.vscode/
+client/node_modules/
+client/.angular/
+client/.editorconfig
+client/src/environments/
+
+server/.vscode/
+server/node_modules/
+server/build/
+server/.env
