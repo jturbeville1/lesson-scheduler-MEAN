@@ -4,7 +4,7 @@ client/.angular/
 client/.editorconfig
 client/src/environments/
 
-server/.vscode/
-server/node_modules/
-server/build/
-server/.env
+api/.vscode/
+api/node_modules/
+api/build/
+api/.env

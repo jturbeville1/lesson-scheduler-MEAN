@@ -7,12 +7,19 @@ import Instructor from '@interfaces/Instructor';
 import { DateService } from '@services/date.service';
 import { InstructorService } from '@services/instructor.service';
 import { TimeslotService } from '@services/timeslot.service';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { toArray } from 'rxjs';
 
 const today = new Date();
 today.setHours(0);
 today.setMinutes(0);
 today.setSeconds(0);
+
+const breakpoints = [
+    Breakpoints.Medium,
+    Breakpoints.Large,
+    Breakpoints.XLarge,
+];
 
 @Component({
     selector: 'app-scheduler',
@@ -25,13 +32,16 @@ export class SchedulerComponent {
     minDate = new Date();
     instructors: Instructor[] = [];
     timeslotId = '';
-    timeslotDetails: any;
     timeslots: any[] = [];
+    isFormDisabled = true;
+    numCols = 1;
+    ceil = Math.ceil;
 
     constructor(
         private instructorService: InstructorService,
         private timeslotService: TimeslotService,
         private dateService: DateService,
+        private breakpointObserver: BreakpointObserver
     ) {
         this.instructorControl = new FormControl('', [Validators.required]);
         this.dateControl = new FormControl({ 
@@ -44,10 +54,21 @@ export class SchedulerComponent {
     }
 
     ngOnInit() {
+        this.breakpointObserver.observe(breakpoints)
+            .subscribe(result => {
+                if (
+                    result.breakpoints[breakpoints[0]] ||
+                    result.breakpoints[breakpoints[1]] ||
+                    result.breakpoints[breakpoints[2]]
+                ) {
+                    this.numCols = 2;
+                } else {
+                    this.numCols = 1;
+                }
+            });
         this.instructorService.getInstructors()
-            .pipe(toArray())
-            .subscribe((dataArray: any[]) => {
-                this.instructors = dataArray[0];
+            .subscribe((dataArray: any) => {
+                this.instructors = dataArray;
             });
     }
 
@@ -62,22 +83,21 @@ export class SchedulerComponent {
     handleInstructorChange(event: MatSelectChange) {
         console.log('Instructor:', event);
         this.dateControl.enable();
-        console.log(this.dateControl.value);
-        
+        console.log(this.numCols);
         this.getTimeslots((event as unknown as string), this.dateControl.value);
     }
 
     handleDateChange(event: MatDatepickerInputEvent<any, any>) {
         console.log('Date:', event.target.value);
+        this.isFormDisabled = true;
         this.getTimeslots(this.instructorControl.value, event.target.value);
     }
 
     getTimeslots(instructorId: string, date: Date) {
         this.timeslots = [];
         this.timeslotService.getTimeslots(instructorId, date)
-            .pipe(toArray())
-            .subscribe((dataArray: any[]) => {
-                dataArray[0].forEach((timeslot: any) => {
+            .subscribe((dataArray: any) => {
+                dataArray.forEach((timeslot: any) => {
                     if (timeslot.time < new Date().getTime()) {
                         timeslot.open = false;
                     }
@@ -88,11 +108,7 @@ export class SchedulerComponent {
 
     onTimeslotClick(event: MatButtonToggleChange) {
         console.log('Timeslot:', event.value);
-        let curTimeslot = this.getTimeslotById(event.value);
-        this.timeslotDetails = {
-            displayDate: this.getDisplayDate(new Date(curTimeslot.time)),
-            displayTime: this.dateService.getDisplayTime(curTimeslot.time),
-        };
+        this.isFormDisabled = false;
         this.timeslotId = event.value;
     }
 

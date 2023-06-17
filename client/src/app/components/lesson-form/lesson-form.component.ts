@@ -1,4 +1,4 @@
-import { Component, Input, Output, OnInit, EventEmitter } from '@angular/core';
+import { Component, Input, Output, OnInit, OnChanges, SimpleChanges, EventEmitter } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
@@ -7,12 +7,14 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 	styleUrls: ['./lesson-form.component.scss']
 })
 export class LessonFormComponent {
-	@Input() timeslotDetails: any;
+	@Input() isFormDisabled = true;
 	@Output() formSubmit = new EventEmitter();
-	formGroup: FormGroup;
+	form: FormGroup;
+	numCols = 1;
+	nameEmailColspan = 1;
 
 	constructor(private formBuilder: FormBuilder) {
-		this.formGroup = this.formBuilder.group({
+		this.form = this.formBuilder.group({
 			date: [''],
 			time: [''],
 			studentName: ['', [
@@ -28,13 +30,18 @@ export class LessonFormComponent {
 	}
 
 	ngOnInit() {
-		this.formGroup.patchValue({
-			date: this.timeslotDetails.displayDate,
-			time: this.timeslotDetails.displayTime,
-		});
+		this.form.disable();
+	}
+
+	ngOnChanges(changes: SimpleChanges) {
+		if (!changes['isFormDisabled']!.currentValue.isFormDisabled) {
+			this.form.enable();
+		} else {
+			this.form.disable();
+		}
 	}
 
 	onSubmit() {
-		this.formSubmit.emit(this.formGroup.value);
+		this.formSubmit.emit(this.form.value);
 	}
 }

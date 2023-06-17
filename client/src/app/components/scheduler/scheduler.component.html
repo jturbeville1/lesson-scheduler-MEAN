@@ -1,68 +1,101 @@
-<mat-grid-list
-    cols="2"
-    rowHeight="5em"
+<div 
+    class="scheduler"
 >
-    <mat-grid-tile colspan="1">
-        <mat-form-field appearance="outline">
-            <mat-label>Select an instructor</mat-label>
-            <mat-select
-                matInput
-                [formControl] = "instructorControl"
-                (valueChange)="handleInstructorChange($event)"
-            >
-                <mat-option
-                    *ngFor="let instructor of instructors"
-                    [value]="instructor._id"
+    <mat-grid-list
+        [cols]="numCols"
+        rowHeight="3em"
+    >
+        <mat-grid-tile
+            colspan="1"
+            rowspan="2"
+        >
+            <div>
+                <mat-form-field
+                    class="form-field"
+                    appearance="outline"
                 >
-                    {{ instructor.name }}
-                </mat-option>
-            </mat-select>
-        </mat-form-field>
-    </mat-grid-tile>
-    <mat-grid-tile colspan="1">
-        <mat-form-field appearance="outline">
-            <input
-                matInput
-                [formControl]="dateControl"
-                [matDatepicker]="picker"
-                (dateChange)="handleDateChange($event)"
-                [min]="minDate"
-            >
-            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-            <mat-datepicker #picker></mat-datepicker>
-        </mat-form-field>
-    </mat-grid-tile>
-    <mat-grid-tile 
-        colspan="2"
-        *ngIf="instructorControl.value === ''"
-    >
-        Select an instructor to see available lesson times.
-    </mat-grid-tile>
-    <mat-grid-tile
-        colspan="2"
-        *ngIf="instructorControl.value !== '' && timeslots.length == 0"
-    >
-        Sorry, looks like {{ getInstructorById(instructorControl.value).name }} does not 
-        have any lesson times on {{ getDisplayDate(dateControl.value) }}.
-    </mat-grid-tile>
-    <mat-grid-tile
-        colspan="1"
-        rowspan=""
-        *ngIf="instructorControl.value !== '' && timeslots.length > 0">
-        <app-day-schedule
-            [timeslots]="timeslots"
-            (timeslotClick)="onTimeslotClick($event)"
-        ></app-day-schedule>
-    </mat-grid-tile>
-    <mat-grid-tile
-        colspan="1"
-        rowspan="10"
-        style="background-color: red;"
-    >
-        <app-lesson-form
-            [timeslotDetails]="timeslotDetails"
-            (formSubmit)="onFormSubmit($event)"
-            style="width: 100%; height: 100%;"
-        ></app-lesson-form>
-    </mat-grid-tile>
-</mat-grid-list>
+                    <mat-label>Instructor</mat-label>
+                    <mat-select
+                        matInput
+                        [formControl] = "instructorControl"
+                        (valueChange)="handleInstructorChange($event)"
+                    >
+                        <mat-option
+                            *ngFor="let instructor of instructors"
+                            [value]="instructor._id"
+                        >
+                            {{ instructor.name }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </mat-grid-tile>
+        <mat-grid-tile
+            colspan="1"
+            rowspan="2"
+        >
+            <div>
+                <mat-form-field
+                    class="form-field"
+                    appearance="outline"
+                >
+                    <mat-label>Date</mat-label>
+                    <input
+                        matInput
+                        [formControl]="dateControl"
+                        [matDatepicker]="picker"
+                        (dateChange)="handleDateChange($event)"
+                        [min]="minDate"
+                    >
+                    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+            </div>
+        </mat-grid-tile>
+        <mat-grid-tile
+            [colspan]="numCols"
+            rowspan="2"
+            *ngIf="instructorControl.value === ''"
+        >
+            <p>
+                Select an instructor to see available times.
+            </p>
+        </mat-grid-tile>
+        <mat-grid-tile
+            [colspan]="numCols"
+            rowspan="2"
+            *ngIf="instructorControl.value !== '' && timeslots.length == 0"
+        >
+            <p>
+                Sorry, looks like {{ getInstructorById(instructorControl.value).name }} does not 
+                have any lesson times on {{ getDisplayDate(dateControl.value) }}.
+            </p>
+        </mat-grid-tile>
+        <mat-grid-tile
+            colspan="1"
+            [rowspan]="timeslots.length + 1"
+            *ngIf="instructorControl.value !== '' && timeslots.length > 0"
+        >
+            <div>
+                <app-day-schedule
+                    class="day-schedule"
+                    [timeslots]="timeslots"
+                    (timeslotClick)="onTimeslotClick($event)"
+                ></app-day-schedule>
+            </div>
+        </mat-grid-tile>
+        <mat-grid-tile
+            colspan="1"
+            rowspan="11"
+            *ngIf="timeslots.length > 0"
+        >
+            <div>
+                <app-lesson-form
+                    class="lesson-form"
+                    [isFormDisabled]="isFormDisabled"
+                    (formSubmit)="onFormSubmit($event)"
+                ></app-lesson-form>
+            </div>
+        </mat-grid-tile>
+    </mat-grid-list>
+</div>

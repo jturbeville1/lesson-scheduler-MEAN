@@ -1,40 +1,20 @@
-<mat-card style="width: 50em; height: 100%">
-    <form
-        [formGroup]="formGroup"
-        (ngSubmit)="onSubmit()"
+<form
+    [formGroup]="form"
+    (ngSubmit)="onSubmit()"
+>
+    <mat-grid-list
+        [cols]="numCols"
+        rowHeight="6em"
     >
-        <mat-grid-list
-            cols="2"
-            rowHeight="5em"
-            gutterSize="0px"
+        <mat-grid-tile
+            class="student-input"
+            [colspan]="nameEmailColspan"
         >
-            <mat-grid-tile colspan="1">
-                <mat-form-field appearance="outline" style="width: 100%;">
-                    <mat-label>Date</mat-label>
-                    <input
-                        matInput
-                        readonly
-                        type="text"
-                        formControlName="date"
-                    >
-                </mat-form-field>
-            </mat-grid-tile>
-            <mat-grid-tile colspan="1">
-                <mat-form-field appearance="outline" style="width: 100%;">
-                    <mat-label>Time</mat-label>
-                    <input
-                        matInput
-                        readonly
-                        type="text"
-                        formControlName="time"
-                    >
-                </mat-form-field>
-            </mat-grid-tile>
-            <mat-grid-tile
-                class="student-input"
-                colspan="2"
-            >
-                <mat-form-field appearance="outline" style="width: 25em;">
+            <div>
+                <mat-form-field
+                    class="form-field"
+                    appearance="outline"
+                >
                     <mat-label>Name</mat-label>
                     <input
                         matInput
@@ -42,24 +22,29 @@
                         formControlName="studentName"
                     >
                     <mat-error
-                        *ngIf="formGroup.controls['studentName'].invalid &&
-                            formGroup.controls['studentName'].touched &&
-                            formGroup.controls['studentName'].errors"
+                        *ngIf="form.controls['studentName'].invalid &&
+                            form.controls['studentName'].touched &&
+                            form.controls['studentName'].errors"
                     >
-                        <span *ngIf="formGroup.controls['studentName'].errors['required']">
+                        <span *ngIf="form.controls['studentName'].errors['required']">
                             Name is required.
                         </span>
-                        <span *ngIf="formGroup.controls['studentName'].errors['minlength']">
+                        <span *ngIf="form.controls['studentName'].errors['minlength']">
                             Name is too short.
                         </span>
                     </mat-error>
                 </mat-form-field>
-            </mat-grid-tile>
-            <mat-grid-tile
-                class="student-input"
-                colspan="2"
-            >
-                <mat-form-field appearance="outline">
+            </div>
+        </mat-grid-tile>
+        <mat-grid-tile
+            class="student-input"
+            [colspan]="nameEmailColspan"
+        >
+            <div>
+                <mat-form-field
+                    class="form-field"
+                    appearance="outline"
+                >
                     <mat-label>Email</mat-label>
                     <input
                         matInput
@@ -68,38 +53,46 @@
                     >
                 </mat-form-field>
                 <mat-error
-                    *ngIf="formGroup.controls['studentEmail'].invalid &&
-                        formGroup.controls['studentEmail'].touched &&
-                        formGroup.controls['studentEmail'].errors"
+                    *ngIf="form.controls['studentEmail'].invalid &&
+                        form.controls['studentEmail'].touched &&
+                        form.controls['studentEmail'].errors"
                 >
-                    <span *ngIf="formGroup.controls['studentEmail'].errors['required']">
+                    <span *ngIf="form.controls['studentEmail'].errors['required']">
                         Email is required.
                     </span>
-                    <span *ngIf="formGroup.controls['studentEmail'].errors['email']">
+                    <!-- <span *ngIf="form.controls['studentEmail'].errors['email']">
                         Not a valid email address.
-                    </span>
+                    </span> -->
                 </mat-error>
-            </mat-grid-tile>
-            <mat-grid-tile
-                class="student-input"
-                colspan="2"
-            >
-                <mat-form-field appearance="outline">
+            </div>
+        </mat-grid-tile>
+        <mat-grid-tile
+            class="student-input"
+            [colspan]="numCols"
+            rowspan="2"
+        >
+            <div>
+                <mat-form-field
+                    class="form-field multi-row"
+                    appearance="outline"
+                    style="height: 80%;"
+                >
                     <mat-label>Notes (optional)</mat-label>
                     <textarea
                         matInput
                         formControlName="studentNotes"
                     ></textarea>
                 </mat-form-field>
-            </mat-grid-tile>
-            <mat-grid-tile colspan="2">
-                <button
-                    mat-flat-button
-                    type="submit"
-                    color="primary"
-                    [disabled]="formGroup.invalid"
-                >Submit</button>
-            </mat-grid-tile>
-        </mat-grid-list>
-    </form> 
-</mat-card>
+            </div>
+        </mat-grid-tile>
+        <mat-grid-tile [colspan]="numCols">
+            <button
+                class="form-field"
+                mat-flat-button
+                type="submit"
+                color="primary"
+                [disabled]="form.invalid || form.disabled"
+            >Submit</button>
+        </mat-grid-tile>
+    </mat-grid-list>
+</form>

@@ -1,4 +1,4 @@
-<div>
+<div class="day-schedule">
     <mat-button-toggle-group
         (change)="handleButtonClick($event)"
         vertical
@@ -8,8 +8,9 @@
             *ngFor="let timeslot of timeslots"
             [value]="timeslot._id"
             [disabled]="!timeslot.open"
+            style="height: 3em;"
         >
             {{ getDisplayTime(timeslot.time) }}
         </mat-button-toggle>
-      </mat-button-toggle-group>
+    </mat-button-toggle-group>
 </div>

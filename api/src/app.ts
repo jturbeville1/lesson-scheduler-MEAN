@@ -16,8 +16,8 @@ app.use(cors());
 app.use(instructorRouter);
 app.use(timeslotRouter);
 
-const PORT = 8080;
+const PORT = process.env.PORT || 8080;
 
 app.listen(PORT, function () {
-    console.log('App started on PORT ', PORT);
+    console.log('App started on PORT', PORT);
 });

@@ -1,3 +1,40 @@
-.scheduler {
-    width: 90%;
+@import '../../styles/mixins.scss';
+
+.mat-grid-tile {
+    div {
+        width: 100%;
+        height: 100%;
+        padding: 5%;
+        @include flex-align(center, center);
+        flex-direction: column;
+    }
+
+    p {
+        padding: 10%;
+        text-align: center;
+        line-height: 200%;
+    }
+}
+
+.form-field {
+    @include flex-align(center, center);
+    width: 100%;
+    .single-row {
+        height: 50%;
+    }
+    .multi-row {
+        height: 100%;
+    }
+}
+
+.day-schedule {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.lesson-form {
+    height: 100%;
+    width: 100%;
 }
