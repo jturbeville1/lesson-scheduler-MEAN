@@ -8,7 +8,7 @@ import { DateService } from '@services/date.service';
 import { InstructorService } from '@services/instructor.service';
 import { TimeslotService } from '@services/timeslot.service';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { toArray } from 'rxjs';
+import Timeslot from '@interfaces/Timeslot';
 
 const today = new Date();
 today.setHours(0);
@@ -32,7 +32,7 @@ export class SchedulerComponent {
     minDate = new Date();
     instructors: Instructor[] = [];
     timeslotId = '';
-    timeslots: any[] = [];
+    timeslots: Timeslot[] = [];
     isFormDisabled = true;
     numCols = 1;
     ceil = Math.ceil;
@@ -43,6 +43,7 @@ export class SchedulerComponent {
         private dateService: DateService,
         private breakpointObserver: BreakpointObserver
     ) {
+        // create the controls for instructor and date inputs
         this.instructorControl = new FormControl('', [Validators.required]);
         this.dateControl = new FormControl({ 
             value: today,
@@ -54,6 +55,8 @@ export class SchedulerComponent {
     }
 
     ngOnInit() {
+        /* breakpoint observer changes the number of columns
+        in the grid depending on screen size */
         this.breakpointObserver.observe(breakpoints)
             .subscribe(result => {
                 if (
@@ -66,12 +69,14 @@ export class SchedulerComponent {
                     this.numCols = 1;
                 }
             });
+        // populates list of instructors for dropdown
         this.instructorService.getInstructors()
-            .subscribe((dataArray: any) => {
+            .subscribe((dataArray: Instructor[]) => {
                 this.instructors = dataArray;
             });
     }
 
+    // validates that the date selected is today or in the future
     minDateValidator() {
         return (control: AbstractControl) => {
             const selectedDate = new Date(control.value);
@@ -80,24 +85,26 @@ export class SchedulerComponent {
         };
     }
 
-    handleInstructorChange(event: MatSelectChange) {
-        console.log('Instructor:', event);
+    // enables datepicker and fetches timeslots
+    handleInstructorChange(change: MatSelectChange) {
+        console.log('Instructor:', change);
         this.dateControl.enable();
-        console.log(this.numCols);
-        this.getTimeslots((event as unknown as string), this.dateControl.value);
+        this.getTimeslots((change as unknown as string), this.dateControl.value);
     }
 
+    // fetches timeslots when the date input changes
     handleDateChange(event: MatDatepickerInputEvent<any, any>) {
         console.log('Date:', event.target.value);
         this.isFormDisabled = true;
         this.getTimeslots(this.instructorControl.value, event.target.value);
     }
 
+    // fetches timeslots based on instructor and date
     getTimeslots(instructorId: string, date: Date) {
         this.timeslots = [];
         this.timeslotService.getTimeslots(instructorId, date)
-            .subscribe((dataArray: any) => {
-                dataArray.forEach((timeslot: any) => {
+            .subscribe((dataArray: Timeslot[]) => {
+                dataArray.forEach(timeslot => {
                     if (timeslot.time < new Date().getTime()) {
                         timeslot.open = false;
                     }
@@ -106,12 +113,16 @@ export class SchedulerComponent {
             });
     }
 
+    // sets timeslotId to the currently selected timeslot
     onTimeslotClick(event: MatButtonToggleChange) {
         console.log('Timeslot:', event.value);
         this.isFormDisabled = false;
         this.timeslotId = event.value;
     }
 
+    /* When the user submits the form, the studentName, studentEmail, and
+    studentNotes fields on the timeslot are updated in the db. A
+    confirmation email is sent to studentEmail. */
     onFormSubmit(event: any) {
         this.timeslotService.updateTimeslot(this.timeslotId, {
             studentName: event.studentName,
@@ -136,13 +147,14 @@ export class SchedulerComponent {
         })[0];
     }
 
-    getDisplayDate(date: Date) {
-        return this.dateService.getDisplayDate(date);
-    }
-
     getTimeslotById(id: string) {
         return this.timeslots.filter(timeslot => {
             return timeslot._id === id;
         })[0];
+    }
+
+    // formats date to MM/DD/YYYY
+    getDisplayDate(date: Date) {
+        return this.dateService.getDisplayDate(date);
     }
 }

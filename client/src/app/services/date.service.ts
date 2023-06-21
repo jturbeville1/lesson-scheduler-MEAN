@@ -1,15 +1,19 @@
 import { Injectable } from '@angular/core';
 
-const millisPerDay = 86400000;
+/* This service performs operations on dates 
+(conversions, formatting, etc.). Several different
+components require date manipulation, */
 
 @Injectable({
     providedIn: 'root'
 })
 export class DateService {
+    // formats date to MM/DD/YYYY
     getDisplayDate(date: Date) {
         return `${date.getMonth()+1}/${date.getDate()}/${date.getFullYear()}`;
     }
 
+    // formats times to AM-PM standard
     getDisplayTime(time: number) {
         let date = new Date(time);
         let minutes = date.getMinutes() > 9 ? date.getMinutes() : '0' + date.getMinutes();

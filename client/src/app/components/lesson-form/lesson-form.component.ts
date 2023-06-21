@@ -1,5 +1,13 @@
-import { Component, Input, Output, OnInit, OnChanges, SimpleChanges, EventEmitter } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import {
+	Component,
+	Input,
+	Output,
+	OnInit,
+	OnChanges,
+	SimpleChanges,
+	EventEmitter
+} from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
 	selector: 'app-lesson-form',
@@ -7,13 +15,16 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 	styleUrls: ['./lesson-form.component.scss']
 })
 export class LessonFormComponent {
+	// parent component controls when form is enabled
 	@Input() isFormDisabled = true;
+	// event is emitted when the form is submitted
 	@Output() formSubmit = new EventEmitter();
 	form: FormGroup;
 	numCols = 1;
 	nameEmailColspan = 1;
 
 	constructor(private formBuilder: FormBuilder) {
+		// create form for student input
 		this.form = this.formBuilder.group({
 			date: [''],
 			time: [''],
@@ -33,6 +44,7 @@ export class LessonFormComponent {
 		this.form.disable();
 	}
 
+	// enable form when a timeslot is selected
 	ngOnChanges(changes: SimpleChanges) {
 		if (!changes['isFormDisabled']!.currentValue.isFormDisabled) {
 			this.form.enable();
@@ -41,6 +53,7 @@ export class LessonFormComponent {
 		}
 	}
 
+	// emit event when submit button is clicked
 	onSubmit() {
 		this.formSubmit.emit(this.form.value);
 	}

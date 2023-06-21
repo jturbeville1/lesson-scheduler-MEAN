@@ -1,6 +1,9 @@
 export default interface Timeslot {
+    _id: string;
+    instructorId: string;
     time: number;
-    instructorId: string,
-    studentId?: string,
     open: boolean;
+    studentName?: string;
+    studentEmail?: string;
+    studentNotes?: string;
 }

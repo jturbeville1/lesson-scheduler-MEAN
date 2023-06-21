@@ -1,11 +1,11 @@
 services:
   client:
     build: ./client
-    container_name: jturbeville/lesson-scheduler-client
+    container_name: lesson-scheduler-client
     ports:
       - '80:80'
   api:
     build: ./api
-    container_name: jturbeville/lesson-scheduler-server
+    container_name: lesson-scheduler-server
     ports: 
       - '8080:8080'
